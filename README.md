@@ -1,4 +1,4 @@
-# DiceRollingGame
+# Dice Rolling Game
 console application in the tested language (C#/C++) that will allow multiple players to take turns rolling a pair of dice, track game progress and display the results of each “roll”.   A designated number of rounds defines the length of the game.  With each round a player takes a turn at rolling the dice and accumulates points toward his total in the amount of the result of the roll(s).  The player with the highest point total at the end of the game is the winner.  In the event of a tie, additional turns will be taken as needed to determine a winner.
 Game Parameters
 
