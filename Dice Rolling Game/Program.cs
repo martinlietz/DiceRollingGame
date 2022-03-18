@@ -8,7 +8,9 @@ namespace Dice_Rolling_Game
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
+            DiceRollingGame game = new DiceRollingGame(); ; // Create a DiceRollingGame object
+
         }
     }
 }
