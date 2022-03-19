@@ -10,7 +10,11 @@ namespace Dice_Rolling_Game
         {
             
             DiceRollingGame game = new DiceRollingGame(); ; // Create a DiceRollingGame object
-
+            game.start();
+            while(game.running == 1)
+            {
+                game.play();
+            }
         }
     }
 }
