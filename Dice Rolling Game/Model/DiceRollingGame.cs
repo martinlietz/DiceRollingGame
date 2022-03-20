@@ -121,7 +121,8 @@ namespace Dice_Rolling_Game.Model
                         
                         if(i==(numberRounds-1) & player == players[players.Count-1])
                         {
-                            if (checkWinner() == null)
+                            Player winner = checkWinner();
+                            if (winner == null)
                             {
                                 //Still no winner lets do one more run.
                                 Console.WriteLine("Still no winner lets do one more run.");
@@ -141,7 +142,8 @@ namespace Dice_Rolling_Game.Model
                                     Console.Write("\r\\");
                                     System.Threading.Thread.Sleep(50);
                                 }
-                                Console.WriteLine(String.Format("Player {0} with running total {3}", player.shortname, rnd1, rnd2, player.gameScore));
+                                Console.WriteLine(String.Format("Player {0} with running total {3}", winner.shortname, rnd1, rnd2, winner.gameScore));
+                                stop();
                             }
                         }
                         
@@ -191,6 +193,7 @@ namespace Dice_Rolling_Game.Model
         }
         public Player checkWinner()
         {
+            
             int maxValue = players.Max(x => x.gameScore);
             int nWinners = players.FindAll(x => x.gameScore == maxValue).Count();
             
