@@ -37,21 +37,27 @@ namespace Dice_Rolling_Game.Model
             try
             {
                 //Define the number of players of the game , between 2 and 5 default 2
-                Console.WriteLine("How many players we have?(2-5)");
+                Console.WriteLine("How many players we have?(2-5) default is " + noDefaultPlayers);
                 string strPlayers = Console.ReadLine();
                 int errCnt = 0;
-                while (!(int.TryParse(strPlayers, out numberPlayers)) & numberPlayers > 1 & numberPlayers < 6)
+                bool isOk = int.TryParse(strPlayers, out numberPlayers);
+                while (!(isOk) | (!(numberPlayers > 1 & numberPlayers <= 5)))
                 {
                     errCnt += 1;
                     if (errCnt > 8)
                     {
                         throw new Exception("You can do better!");
                     }
+                    Console.WriteLine("How many players we have?(2-5) default is " + noDefaultPlayers);
+                    strPlayers = Console.ReadLine();
+                    isOk = int.TryParse(strPlayers, out numberPlayers);
+                    if (String.IsNullOrEmpty(strPlayers))
+                    {
+                        numberPlayers = noDefaultPlayers;
+                        isOk = true;
+                    }
                 }
-                if(numberPlayers ==0)
-                {
-                    numberPlayers = noDefaultPlayers;
-                }
+                
                 for (int i = 0; i < numberPlayers; i++)
                 {
 
@@ -64,29 +70,39 @@ namespace Dice_Rolling_Game.Model
                     players.Add(new Player(strNome.Left(3)));
                 }
                 //Define the number of rounds we play , between 2 and 10 default 5
-                Console.WriteLine("How many rounds we play?(2-10) default is 5");
+                Console.WriteLine("How many rounds we play?(2-10) default is " + noDefaultRounds);
                 string strRounds = Console.ReadLine();
                 //check if we got something empty
                 if (String.IsNullOrEmpty(strRounds.Trim()))
                     numberRounds = noDefaultRounds;
                 else
                 {
-                    while (!(int.TryParse(strRounds, out numberRounds)) & numberRounds > 1 & numberRounds <= 10)
+                    isOk = int.TryParse(strRounds, out numberRounds);
+                    errCnt = 0;
+                    while (!(isOk) | (!(numberRounds > 1 & numberRounds <= 10)))
                     {
                         errCnt += 1;
                         // after 8 times wrong I give up.
-                        if (errCnt > 8)
+                        if (errCnt > 8) 
                         {
                             throw new Exception("You can do better!");
+                        }
+                        Console.WriteLine("How many rounds we play?(2-10) default is " + noDefaultRounds);
+                        strRounds = Console.ReadLine();
+                        isOk = int.TryParse(strRounds, out numberRounds);
+                        if (String.IsNullOrEmpty(strRounds))
+                        {
+                            numberRounds = noDefaultRounds;
+                            isOk = true;
                         }
                     }
                 }
                 running = 1;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
         /// <summary>
@@ -187,6 +203,7 @@ namespace Dice_Rolling_Game.Model
                     lstReplay.Add(strReplayRound);
                 }
             }
+
             catch (Exception)
             {
 
@@ -206,7 +223,7 @@ namespace Dice_Rolling_Game.Model
                 Console.WriteLine("a. Play another game.");
                 Console.WriteLine("b. Play back the game just completed.");
                 Console.WriteLine("c. Quit the game.");
-                string strChoose = Console.ReadLine();
+                string strChoose = Console.ReadKey().KeyChar.ToString();
                 Boolean valid = false;
                 while(!valid)
                 { 
@@ -230,12 +247,22 @@ namespace Dice_Rolling_Game.Model
                             valid = true;
                             break;
                         default:
-                            Console.WriteLine("Not a valid choice, try again!");
-                            Console.WriteLine("Choose one of the following options:");
-                            Console.WriteLine("a. Play another game.");
-                            Console.WriteLine("b. Play back the game just completed.");
-                            Console.WriteLine("c. Quit the game.");
-                            strChoose = Console.ReadLine();
+                            //in case os some ENTER ignore and read again without print the message again
+                            if(strChoose == "\r")
+                            {
+                                strChoose = Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Not a valid choice, try again!");
+                                Console.WriteLine("Choose one of the following options:");
+                                Console.WriteLine("a. Play another game.");
+                                Console.WriteLine("b. Play back the game just completed.");
+                                Console.WriteLine("c. Quit the game.");
+                                strChoose = Console.ReadLine();
+                            }
+
+                            
                             break;
                     }
                 }
@@ -266,7 +293,7 @@ namespace Dice_Rolling_Game.Model
             }
             else
             {
-                players.FindAll(x => x.active = false);
+                players.FindAll(x => x.gameScore != maxValue).FindAll(x => x.active = false);
                 return null;
             }
         }
@@ -282,8 +309,14 @@ namespace Dice_Rolling_Game.Model
             //setDefaults to previous game values
             noDefaultPlayers = players.Count();
             noDefaultRounds = numberRounds;
+            players = new List<Player>();
+            lstReplay = new();
             //and play again
             start();
+            while (running == 1)
+            {
+                play();
+            }
         }
         /// <summary>
         /// This method replay the last game
@@ -300,6 +333,8 @@ namespace Dice_Rolling_Game.Model
                     Console.WriteLine(str);
                     if (str == "Roll?")
                     {
+                        Console.WriteLine("Next section click ENTER");
+                        string strNextSection = Console.ReadLine();
                         for (int x = 0; x < 10; x++)
                         {
                             Console.Write("\r|");
@@ -312,13 +347,14 @@ namespace Dice_Rolling_Game.Model
                             System.Threading.Thread.Sleep(50);
                         }
                     }
-                    if (i > 10)
-                    {
-                        Console.WriteLine("Next section click a key");
-                        
-                        string strNextSection = Console.ReadLine();
-                        i = 0;
-                    }
+                    
+                    //if (i > 10)
+                    //{
+                    //    Console.WriteLine("Next section click a key");
+
+                    //    string strNextSection = Console.ReadLine();
+                    //    i = 0;
+                    //}
                 }
             }
             stop(); 
