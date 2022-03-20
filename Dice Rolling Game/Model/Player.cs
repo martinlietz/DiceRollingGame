@@ -10,6 +10,7 @@ namespace Dice_Rolling_Game.Model
     {
         public string shortname;
         public int gameScore = 0;
+        public bool active = true;
         public Player(string shortname)
         {
             this.shortname = shortname;
