@@ -37,10 +37,11 @@ namespace Dice_Rolling_Game.Model
             try
             {
                 //Define the number of players of the game , between 2 and 5 default 2
-                Console.WriteLine("How many players we have?(2-5) default is " + noDefaultPlayers);
-                string strPlayers = Console.ReadLine();
+                //Console.WriteLine("How many players we have?(2-5) default is " + noDefaultPlayers);
+                //string strPlayers = Console.ReadLine();
+                string strPlayers;
                 int errCnt = 0;
-                bool isOk = int.TryParse(strPlayers, out numberPlayers);
+                bool isOk = false;
                 while (!(isOk) | (!(numberPlayers > 1 & numberPlayers <= 5)))
                 {
                     errCnt += 1;
@@ -224,6 +225,9 @@ namespace Dice_Rolling_Game.Model
                 Console.WriteLine("b. Play back the game just completed.");
                 Console.WriteLine("c. Quit the game.");
                 string strChoose = Console.ReadKey().KeyChar.ToString();
+                if(strChoose == "\r")
+                    strChoose = Console.ReadKey().KeyChar.ToString();
+                
                 Boolean valid = false;
                 while(!valid)
                 { 
@@ -242,7 +246,7 @@ namespace Dice_Rolling_Game.Model
                             strChoose = Console.ReadLine();
                             break;
                         case "c":
-                            Console.WriteLine("Was nice to play with you, bye!");
+                            Console.WriteLine("\nWas nice to play with you, bye!");
                             running = 0;
                             valid = true;
                             break;
